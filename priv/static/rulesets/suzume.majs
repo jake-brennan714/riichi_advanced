@@ -1,0 +1,30 @@
+define_set shuntsu, ~s"0 1 2"
+define_set koutsu, ~s"0 0 0"
+define_set mentsu, ~s"0 0 0 | 0 1 2"
+define_set taatsu, ~s"0 0 | 0 1 | 0 2"
+define_set hatsu, ~s"6z 6z 6z"
+define_set chun, ~s"7z 7z 7z"
+
+define_set yaojun, ~s"0@yaochuuhai 1 2 | 0 1 2@yaochuuhai"
+define_set yaokou, ~s"0@yaochuuhai 0@yaochuuhai 0@yaochuuhai"
+define_match chanta_hand, ~m"exhaustive, (yaojun yaokou):2"
+define_match chinyao_hand, ~m"exhaustive, yaokou:2"
+define_set tanjun, ~s"0@tanyaohai 1@tanyaohai 2@tanyaohai"
+define_set tankou, ~s"0@tanyaohai 0@tanyaohai 0@tanyaohai"
+define_match tanyao_hand, ~m"exhaustive, (tanjun tankou):2"
+
+define_match tenpai, ~m"exhaustive, mentsu:1, taatsu:1"
+
+define_match win, ~m"exhaustive, mentsu:2"
+
+define_yaku yaku, "Tanyao", 1, match(["hand", "winning_tile"], ["tanyao_hand"])
+define_yaku yaku, "Chanta", 2, match(["hand", "winning_tile"], ["chanta_hand"])
+define_yaku yaku, "Chinyao", 15, match(["hand", "winning_tile"], ["chinyao_hand"]), ["Chanta"]
+
+
+define_yaku extra_yaku, "Shuntsu", "shuntsus", "shuntsus" >= 1
+define_yaku extra_yaku, "Koutsu", "koutsus", "koutsus" >= 1
+
+def count_mentsu_points do
+  set_counter("shuntsus", "count_matches", ["hand", "winning_tile"], ["shuntsu"])
+  set_counter("koutsus", "count_matches", ["hand", "winning_tile"], ["koutsu"])
